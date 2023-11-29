@@ -16,11 +16,16 @@ def index(request):
 
 def register_view(request):
     # This function renders the registration form page and create a new user based on the form data
+    # We use Django's UserCreationForm which is a model created by Django to create a new user.
+    # UserCreationForm has three fields by default: username (from the user model), password1, and password2.
+    # If you want to include email as well, switch to our own custom form called UserRegistrationForm
+
+    # Create an instance of the UserCreationForm
+    # If there is POST data, populate the form with the provided data,
+    # otherwise, create an empty form where Django generates the necessary html on the template.
+    form = UserCreationForm(request.POST or None)
+
     if request.method == 'POST':
-        # We use Django's UserCreationForm which is a model created by Django to create a new user.
-        # UserCreationForm has three fields by default: username (from the user model), password1, and password2.
-        # If you want to include email as well, switch to our own custom form called UserRegistrationForm
-        form = UserCreationForm(request.POST or None)
         # check whether it's valid: for example it verifies that password1 and password2 match
         if form.is_valid():
             # form.save()
@@ -32,9 +37,6 @@ def register_view(request):
             # if you do want to log in the user directly after registration, comment out the three lines above,
             # redirect the user to login page so that after registration the user can enter the credentials
             # return redirect('login')
-    else:
-        # Create an empty instance of Django's UserCreationForm to generate the necessary html on the template.
-        form = UserCreationForm()
 
     return render(request, 'accounts/register.html', {'form': form})
 
